@@ -18,6 +18,22 @@
       "description": "The workspace factory itself; only for workspaces that will scaffold other workspaces",
       "recommend_for": []
     },
+    "qa": {
+      "description": "Quality-gates any artefact against the shipped QA rubric: scored card (Evidence, Voice, Completeness, Actionability), PASS/FAIL, fix-list",
+      "recommend_for": ["content", "client", "ops", "software"]
+    },
+    "review-board": {
+      "description": "Multi-perspective review panel for board- or client-bound deliverables: specialist + commercial + QA lenses, chaired synthesis, fitness verdict, driven revision",
+      "recommend_for": ["client", "ops"]
+    },
+    "diagramming": {
+      "description": "Render-tested diagrams via the right tool (Mermaid, PlantUML, Graphviz, matplotlib, D3, browser-JS) in a draw, review, fix loop",
+      "recommend_for": ["content", "client", "ops", "software"]
+    },
+    "pptx": {
+      "description": "Markdown to PowerPoint: reshapes prose into slide-shaped content, embeds diagrams, converts via pandoc with optional house template",
+      "recommend_for": ["content", "client", "ops"]
+    },
     "humanizer": {
       "description": "Rewrites AI-sounding prose against Wikipedia's Signs of AI writing: keeps every claim, invents nothing, matches the writer's voice. Note: our house no-dash rule outranks its sample-following on em dashes",
       "recommend_for": ["content"],
