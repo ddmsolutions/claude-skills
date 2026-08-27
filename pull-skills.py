@@ -65,10 +65,20 @@ def fetch_external(name, src):
     return skill_dir
 
 
+IGNORE = shutil.ignore_patterns(".git", ".github", "__pycache__", ".external")
+
+
+def _force_rm(func, path, _exc):
+    import os
+    import stat
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
+
+
 def sync_dir(src: Path, dst: Path):
     if dst.exists():
-        shutil.rmtree(dst)
-    shutil.copytree(src, dst)
+        shutil.rmtree(dst, onerror=_force_rm)
+    shutil.copytree(src, dst, ignore=IGNORE)
 
 
 def main():
