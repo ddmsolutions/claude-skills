@@ -1,0 +1,33 @@
+{
+  "comment": "Skill registry. mandatory skills are always synced and cannot be deselected. recommend_for keys match icm-scaffold archetypes (content, client, ops, software). Local skills are folders in this repo; external skills add a source: {repo, path, ref} where ref is a FULL COMMIT SHA (never a branch or tag - supply chain rule). Review any external SKILL.md before first registration: installing a skill imports its author's beliefs along with its instructions.",
+  "mandatory": ["icm-sync", "icm-context-scaffold", "skills-manager"],
+  "skills": {
+    "icm-sync": {
+      "description": "Keeps IDENTITY.md and CONTEXT.md routing accurate as the workspace evolves",
+      "recommend_for": ["content", "client", "ops", "software"]
+    },
+    "icm-context-scaffold": {
+      "description": "Generates missing CONTEXT.md files as folders grow",
+      "recommend_for": ["content", "client", "ops", "software"]
+    },
+    "skills-manager": {
+      "description": "Updates skills from the library, adds new ones (local or external) on demand",
+      "recommend_for": ["content", "client", "ops", "software"]
+    },
+    "icm-scaffold": {
+      "description": "The workspace factory itself; only for workspaces that will scaffold other workspaces",
+      "recommend_for": []
+    }
+  },
+  "external_example": {
+    "humanizer": {
+      "description": "AI-writing cleanup (example entry, not registered)",
+      "recommend_for": ["content"],
+      "source": {
+        "repo": "https://github.com/blader/humanizer",
+        "path": ".",
+        "ref": "<full commit sha - pin before registering>"
+      }
+    }
+  }
+}

@@ -30,6 +30,8 @@ Answers schema (keys marked * are required):
   "decisions": ["ADR line", ...],
   "constraints_extra": ["never-do line", ...],
   "ops_process_name": "domain word",        (ops archetype)
+  "skills":    ["names from the library registry"],  (optional; omit for the
+               archetype recommendation; mandatory skills always included)
   "stages":    [{"name","purpose","inputs_l3":[],"inputs_l4":[],
                  "process":[],"output_format","must_not":[],
                  "done","verify"}]          (full mode / client scope)
@@ -315,7 +317,7 @@ def build(a: dict, dry: bool, force: bool):
                        "review every generated file before first use"],
     }
     if scope == "standalone":
-        report["skills_provisioning"] = plan_skills(root)
+        report["skills_provisioning"] = plan_skills(a, root)
     if not dry:
         for d in dirs:
             (root / d).mkdir(parents=True, exist_ok=True)
@@ -324,11 +326,39 @@ def build(a: dict, dry: bool, force: bool):
             p.parent.mkdir(parents=True, exist_ok=True)
             p.write_text(content, encoding="utf-8")
         if scope == "standalone":
-            provision_skills(root)
+            provision_skills(a, root)
     print(json.dumps(report, indent=1))
 
 
-TRANSFER_SKILLS = ["icm-sync", "icm-context-scaffold"]
+def load_manifest(lib: Path):
+    """Registry from the library's skills.json: (mandatory, skills dict)."""
+    mf = lib / "skills.json"
+    if mf.is_file():
+        m = json.loads(mf.read_text(encoding="utf-8"))
+        return m.get("mandatory", []), m.get("skills", {})
+    return ["icm-sync", "icm-context-scaffold"], {}
+
+
+def select_skills(a: dict, lib: Path):
+    """Mandatory skills always; plus the answers' skills list (validated) or
+    the registry's recommendations for the chosen archetype. Returns
+    (selected_local, external_postponed) - externals install later via
+    /skills-manager, provisioning copies local folders only."""
+    mandatory, registry = load_manifest(lib)
+    if a.get("skills") is not None:
+        unknown = [s for s in a["skills"] if registry and s not in registry]
+        if unknown:
+            fail(2, "unknown skills requested; interview must use the registry",
+                 {"unknown": unknown, "available": sorted(registry)})
+        chosen = set(mandatory) | set(a["skills"])
+    else:
+        recommended = {n for n, v in registry.items()
+                       if a["archetype"] in v.get("recommend_for", [])}
+        chosen = set(mandatory) | recommended
+    local = sorted(s for s in chosen
+                   if "source" not in registry.get(s, {}) and (lib / s).is_dir())
+    external = sorted(s for s in chosen if "source" in registry.get(s, {}))
+    return local, external
 
 
 def library_root():
@@ -349,39 +379,48 @@ def library_root():
     return None
 
 
-def plan_skills(root: Path):
+def plan_skills(a: dict, root: Path):
     lib = library_root()
     if not lib:
         return {"status": "skipped: claude-skills library not found alongside "
                           "scaffold.py; pull the full library to enable provisioning"}
-    return {"status": "planned", "source": str(lib),
-            "into": [f"skills/{s}" for s in TRANSFER_SKILLS] + ["skills/templates"],
-            "discovery": [f".claude/skills/{s}" for s in TRANSFER_SKILLS]}
+    local, external = select_skills(a, lib)
+    plan = {"status": "planned", "source": str(lib),
+            "into": [f"skills/{s}" for s in local] + ["skills/templates"],
+            "discovery": [f".claude/skills/{s}" for s in local]}
+    if external:
+        plan["external_via_skills_manager"] = external
+    return plan
 
 
-def provision_skills(root: Path):
-    """Pull the transferable skills into the new workspace: canonical copies in
+def provision_skills(a: dict, root: Path):
+    """Pull the selected skills into the new workspace: canonical copies in
     the visible skills/ folder, discovery copies in .claude/skills/."""
     import shutil
     lib = library_root()
     if not lib:
         return
-    for s in TRANSFER_SKILLS:
+    local, _external = select_skills(a, lib)
+    for s in local:
         src = lib / s
-        if src.is_dir():
-            shutil.copytree(src, root / "skills" / s, dirs_exist_ok=True)
-            shutil.copytree(src, root / ".claude" / "skills" / s, dirs_exist_ok=True)
+        shutil.copytree(src, root / "skills" / s, dirs_exist_ok=True)
+        shutil.copytree(src, root / ".claude" / "skills" / s, dirs_exist_ok=True)
     if (lib / "templates").is_dir():
         shutil.copytree(lib / "templates", root / "skills" / "templates",
                         dirs_exist_ok=True)
+    (root / "skills").mkdir(exist_ok=True)
+    (root / "skills" / ".source.json").write_text(json.dumps({
+        "repo": "https://github.com/ddmsolutions/claude-skills",
+        "clone": str(lib), "synced": local, "date": TODAY}, indent=1),
+        encoding="utf-8")
     (root / "skills" / "README.md").write_text(
-        "# skills\n\nPulled from https://github.com/ddmsolutions/claude-skills - "
-        "the source of truth. Update by re-pulling; do not edit here.\n"
+        "# skills\n\nPulled from the claude-skills library (see .source.json) - "
+        "the source of truth. Update with /skills-manager; do not edit here.\n"
         f"Synced: {TODAY}\n", encoding="utf-8")
     (root / ".claude" / "skills" / "README.md").write_text(
-        "# Synced skills\n\nDiscovery copies of /skills (canonical content pulled "
-        "from github.com/ddmsolutions/claude-skills). Edit in the repo, re-pull, "
-        "never edit here.\n", encoding="utf-8")
+        "# Synced skills\n\nDiscovery copies of /skills, pulled from the "
+        "claude-skills library. Edit in the repo, re-pull, never edit here.\n",
+        encoding="utf-8")
 
 
 if __name__ == "__main__":

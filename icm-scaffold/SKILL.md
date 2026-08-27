@@ -62,6 +62,15 @@ Software product: what the app does and for whom; the stack; commands (dev, test
 
 All archetypes, always: project name and one-line description (location is already settled in 1.0b, do not ask again); audience for outputs; voice (default: match existing content); existing conventions files to re-export rather than duplicate.
 
+### 1.3b Skills (standalone scope only; in-workspace scaffolds inherit)
+
+Read the library registry (`skills.json` at the library root, or `pull-skills.py --list`). Mandatory skills are always installed and are never offered for deselection; present them as a locked list ("these come with every workspace").
+
+- **Standard flow**: state the recommendation - mandatory plus the registry's `recommend_for` matches for the chosen archetype - and move on. This is the default; no extra question.
+- **Advanced flow** (user asks to choose skills, or says advanced): AskUserQuestion with multiSelect over the OPTIONAL registry skills only (label = skill name, description = registry description; external skills marked as such). Mandatory skills are stated above the question, not listed as options. The final set is mandatory + whatever they tick.
+
+Put the chosen list in the answers JSON as `"skills": [...]` (omit the key entirely for the standard recommendation - the engine computes the same default). The engine rejects unknown names with the available list; external skills are provisioned after creation via /skills-manager, and the dry-run report shows them under `external_via_skills_manager`.
+
 ### 1.4 Consolidate
 
 Play back a one-screen summary of every answer and every inferred default. Get a yes before touching the filesystem.
