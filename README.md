@@ -21,6 +21,25 @@ gets promoted to its own repository (as ai-memory already is).
 | `diagramming` | Render-tested diagrams via the right tool for the job (Mermaid, PlantUML, Graphviz, matplotlib, D3, browser-JS) in a draw, render, review, fix loop; never returns un-rendered source | No | all |
 | `pptx` | Markdown to PowerPoint: reshapes prose into slide-shaped content (one idea per slide, answer first, notes for detail), embeds rendered diagrams, converts via pandoc with an optional house template | No | content, client, ops |
 | `humanizer` | External (blader/humanizer, pinned commit): rewrites AI-sounding prose per Wikipedia's Signs of AI writing - keeps every claim, invents nothing, matches the writer's voice | No | content |
+| `ma-playbook` | M&A playbook for both sides of a deal: rationale, due diligence red flags, valuation, negotiation terms, integration | No | client, ops |
+| `board-deck-builder` | Board and investor deck assembly: fixed 11-section structure, 4-act narrative, bad-news protocol (assumes US VC reporting; adapt for UK boards) | No | client |
+| `chief-ai-officer-advisor` | CAIO decision frameworks with a reference library: build-vs-buy, regulatory risk tiers, API-vs-self-hosted economics, AI hiring sequence | No | client, ops |
+| `cto-advisor` | CTO frameworks with a reference library: technology strategy, team scaling, ADRs, tech debt triage, DORA metrics | No | client, software |
+| `caio-review` / `cto-review` / `ciso-review` / `cfo-review` | CxO review lenses: forcing-question sets with SHIP/SHARPEN/BLOCK-style verdicts; slot into `/review-board` panels as specialist seats (jurisdiction and business-model assumptions annotated per skill) | No | client (+software/ops per lens) |
+| `board-prep` | Adversarial board-meeting preparation: metric drills, hostile question banks, honest narrative, mock-director simulation | No | client, ops |
+| `stress-test` | Systematically attacks a stated business assumption: counter-evidence, downside modelling, sensitivity, hedges | No | client, ops |
+| `postmortem` | Blameless post-mortem: proper 5-Whys, root cause vs contributing factors, missed warnings, owned change register | No | client, ops, software |
+| `scenario-war-room` | What-if modelling of compounding adverse variables: cascade mapping, severity, early-warning triggers, hedges | No | client, ops |
+| `ai-security` | AI/ML security assessment: prompt injection, jailbreaks, poisoning, agent tool abuse, mapped to MITRE ATLAS with layered guardrails | No | client, software |
+
+The thirteen skills above the line are authored here or externally pinned; the
+twelve below `humanizer` are vendored adaptations from
+[alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills)
+at commit `19392f7` (MIT): home-ecosystem dependencies (bundled scripts, command
+routing, agent protocols) removed, methodology preserved, jurisdiction and
+doctrine assumptions annotated in each file's header. Three candidates from the
+same source were rejected at review (decision-logger, ai-act-readiness,
+aims-audit) for unsolicited home-directory writes or ecosystem lock-in.
 
 `templates/` holds the canonical workspace templates the scaffold instantiates:
 claude-md (Layer 0 routing), stage-context (Layer 2 contract), prd, progress,

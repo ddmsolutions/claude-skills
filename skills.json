@@ -34,6 +34,58 @@
       "description": "Markdown to PowerPoint: reshapes prose into slide-shaped content, embeds diagrams, converts via pandoc with optional house template",
       "recommend_for": ["content", "client", "ops"]
     },
+    "ma-playbook": {
+      "description": "M&A playbook for both sides of a transaction: strategic rationale, due diligence red flags, valuation, negotiation terms, integration. Vendored from alirezarezvani/claude-skills @19392f7 (MIT), ecosystem dependencies removed",
+      "recommend_for": ["client", "ops"]
+    },
+    "board-deck-builder": {
+      "description": "Board and investor deck assembly: 11-section structure, 4-act narrative, bad-news protocol. Assumes US VC reporting; adapt for UK/formal boards. Vendored @19392f7 (MIT)",
+      "recommend_for": ["client"]
+    },
+    "chief-ai-officer-advisor": {
+      "description": "CAIO decision frameworks: build-vs-buy, AI regulatory risk tiers, API-vs-self-hosted economics, AI hiring sequence, with full reference library. Market facts are snapshots, verify before use. Vendored @19392f7 (MIT)",
+      "recommend_for": ["client", "ops"]
+    },
+    "cto-advisor": {
+      "description": "CTO frameworks: technology strategy, team scaling, ADRs, build-vs-buy scoring, tech debt triage, DORA metrics, with reference library. Thresholds are defaults, not laws. Vendored @19392f7 (MIT)",
+      "recommend_for": ["client", "software"]
+    },
+    "caio-review": {
+      "description": "AI-plan review lens: six forcing questions (evals, error SLOs, regulatory tier, sourcing, cost trajectory, hiring) with SHIP/SHARPEN/BLOCK verdict. Slots into review-board panels. Vendored @19392f7 (MIT)",
+      "recommend_for": ["client", "software"]
+    },
+    "cto-review": {
+      "description": "Architecture and scaling review lens: scaling cliff, tech debt, team ramp, build-vs-buy TCO, SLOs, security sign-off. Slots into review-board panels. Vendored @19392f7 (MIT)",
+      "recommend_for": ["client", "software"]
+    },
+    "ciso-review": {
+      "description": "Security review lens: STRIDE, blast radius, detection, incident readiness, notification windows, supply chain. US regulatory assumptions annotated; UK/EU GDPR governs locally. Slots into review-board panels. Vendored @19392f7 (MIT)",
+      "recommend_for": ["client", "software"]
+    },
+    "cfo-review": {
+      "description": "Financial review lens: burn, unit economics, dilution, opportunity cost, margin trend, bear case, with GREEN/YELLOW/RED verdict. Venture-SaaS thresholds annotated. Slots into review-board panels. Vendored @19392f7 (MIT)",
+      "recommend_for": ["client", "ops"]
+    },
+    "board-prep": {
+      "description": "Adversarial board-meeting preparation: metric drills, hostile question banks per agenda item, honest narrative, mock-director simulation, checklists. Vendored @19392f7 (MIT)",
+      "recommend_for": ["client", "ops"]
+    },
+    "stress-test": {
+      "description": "Systematically attacks a stated business assumption: counter-evidence, bear/stress/catastrophic downside modelling, sensitivity, validation and hedging actions. Vendored @19392f7 (MIT)",
+      "recommend_for": ["client", "ops"]
+    },
+    "postmortem": {
+      "description": "Blameless post-mortem: precise event definition, proper 5-Whys, root cause vs contributing factors, missed warnings, owned and dated change register. Vendored @19392f7 (MIT)",
+      "recommend_for": ["client", "ops", "software"]
+    },
+    "scenario-war-room": {
+      "description": "Cross-functional what-if modelling of up to three compounding adverse variables: cascade mapping, severity levels, early-warning triggers, hedges. Vendored @19392f7 (MIT)",
+      "recommend_for": ["client", "ops"]
+    },
+    "ai-security": {
+      "description": "AI/ML security assessment: prompt injection, jailbreaks, model inversion, data poisoning, agent tool abuse, mapped to MITRE ATLAS with layered guardrails. Vendored @19392f7 (MIT)",
+      "recommend_for": ["client", "software"]
+    },
     "humanizer": {
       "description": "Rewrites AI-sounding prose against Wikipedia's Signs of AI writing: keeps every claim, invents nothing, matches the writer's voice. Note: our house no-dash rule outranks its sample-following on em dashes",
       "recommend_for": ["content"],
