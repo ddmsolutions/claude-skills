@@ -17,8 +17,9 @@ Answers schema (keys marked * are required):
   "scope":     "standalone | client | project",            *
   "name":      "Project or Client Name",                   *
   "parent":    "D:/somewhere",              (standalone only) *
-  "home":      "ddm|av|cc|ned",             (client)  *
-               "cc|personal",               (project) *
+  "home":      "a key from icm.config.json client_homes (client scope)
+               or project_homes (project scope)",          *
+  "workspace": "path from which to locate icm.config.json (default: cwd)",
   "archetype": "content | client | ops | software",        *
   "mode":      "quick | full",              (default quick)
   "identity":  "one-line description",                     *
@@ -40,17 +41,22 @@ import sys
 from datetime import date
 from pathlib import Path
 
-WORKSPACE = Path(r"P:\_Code-mem")
-HOME_PATHS = {
-    "ddm": WORKSPACE / "ddm-solutions" / "clients",
-    "av": WORKSPACE / "assured-velocity" / "clients",
-    "cc": WORKSPACE / "capability-core" / "clients",
-    "ned": WORKSPACE / "ned" / "clients",
-}
-PROJECT_HOMES = {
-    "cc": WORKSPACE / "capability-core" / "projects",
-    "personal": WORKSPACE / "personal" / "projects",
-}
+def find_workspace_config(start: Path):
+    """Walk up from `start` looking for icm.config.json (the workspace root
+    marker). Returns (workspace_root, config_dict) or (None, None).
+
+    Config schema:
+    {
+      "client_homes":  {"slug": "relative/path/to/clients", ...},
+      "project_homes": {"slug": "relative/path/to/projects", ...}
+    }
+    """
+    p = start.resolve()
+    for candidate in [p, *p.parents]:
+        cfg = candidate / "icm.config.json"
+        if cfg.is_file():
+            return candidate, json.loads(cfg.read_text(encoding="utf-8"))
+    return None, None
 ARCHETYPE_TREES = {
     "content": ["script-lab/ideas", "script-lab/drafts", "script-lab/final",
                 "production/specs", "production/builds", "production/output",
@@ -93,16 +99,19 @@ def derive_root(a: dict) -> Path:
     scope = a["scope"]
     if scope == "standalone":
         return Path(a["parent"]) / slug
-    if scope == "client":
-        base = HOME_PATHS.get(a["home"])
+    if scope in ("client", "project"):
+        root, cfg = find_workspace_config(Path(a.get("workspace", ".")))
+        if not cfg:
+            fail(2, "no icm.config.json found in or above the current directory; "
+                    "in-workspace scopes need one (see script docstring). "
+                    "Only the standalone scope works without a workspace config")
+        key = "client_homes" if scope == "client" else "project_homes"
+        homes = cfg.get(key, {})
+        base = homes.get(a["home"])
         if not base:
-            fail(2, f"unknown client home '{a['home']}' (ddm|av|cc|ned)")
-        return base / slug
-    if scope == "project":
-        base = PROJECT_HOMES.get(a["home"])
-        if not base:
-            fail(2, f"unknown project home '{a['home']}' (cc|personal)")
-        return base / slug
+            fail(2, f"unknown {scope} home '{a['home']}'; "
+                    f"config offers: {sorted(homes) or 'none'}")
+        return root / base / slug
     fail(2, f"unknown scope '{scope}'")
 
 

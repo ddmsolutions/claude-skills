@@ -9,7 +9,7 @@ argument-hint: "Optional: archetype (content|client|ops|software) and/or 'quick'
 
 Build an ICM workspace by interview, not by guesswork. Three phases: diagnose, assemble, orient. The questions are the skill: do not build anything before the diagnosis is complete.
 
-Based on the ICM paper (Van Clief & McDermott, arXiv:2603.16021) and the Vault Toolkit skill-starters. Canonical building blocks live in `P:\_Code-mem\_config\templates\` (claude-md, stage-context, prd, progress, constraints, automation-audit) and archetype references in `P:\_Code-mem\_config\icm-source\` (workflow-starters, production CLAUDE.md examples, folder guide). Instantiate from these; never generate structure from scratch. When scaffolding outside the _Code workspace, copy the needed templates in rather than referencing across.
+Based on the ICM paper (Van Clief & McDermott, arXiv:2603.16021) and the Vault Toolkit skill-starters. Canonical templates (claude-md, stage-context, prd, progress, constraints, automation-audit) ship in this library's `templates/` folder (repo root, sibling of this skill). The assembly engine embeds their structure, so generation works even when only this skill folder was copied. Archetype background reading (workflow starters, production CLAUDE.md examples, folder guide) is optional deep material; in the _Code workspace it lives at `_config/icm-source/`.
 
 **Key framing:** the LLM is a compiler. Stage contracts define inputs and outputs; conversation happens at review gates, not during execution.
 
@@ -19,19 +19,20 @@ Ask with the AskUserQuestion tool wherever the answer is a choice; free text onl
 
 ### 1.0 Scope (AskUserQuestion, ask FIRST)
 
-- **Standalone workspace**: a fresh root folder anywhere. Full set from scratch: IDENTITY/CLAUDE.md (Layer 0), CONTEXT.md, _config/, stages per mode. The rest of this skill as written.
-- **New client inside this workspace**: a folder under a vehicle's clients/ or ned/clients/. Do NOT create a CLAUDE.md or IDENTITY.md (Layer 0 exists at the workspace root) and do NOT create a local _config/. Build the workspace's own client shape: CONTEXT.md + memory/ (with MEMORY.md stub and log/) + references/ + output/. The CONTEXT.md is the engagement contract (use the client-delivery question set). Reference the vehicle's _config and the root _config by path; re-export nothing. Then add the client row to the vehicle's CONTEXT.md routing table and remind the user to run /icm-sync and record work with /log-work.
-- **New project inside this workspace**: a folder under capability-core/projects/ or personal/projects/. Same principle: CONTEXT.md + the archetype's working folders only, no Layer 0, constraints referenced not copied, parent routing updated, /icm-sync suggested.
+In-workspace scopes (client and project) require an `icm.config.json` at the workspace root defining `client_homes` and `project_homes` (see the scaffold.py docstring). No config found means only the standalone scope is offered - say so rather than guessing paths.
+
+- **Standalone workspace**: a fresh root folder anywhere. Full set from scratch: IDENTITY/CLAUDE.md (Layer 0), CONTEXT.md, _config/, stages per mode. The rest of this skill as written. Works with no workspace config.
+- **New client inside a configured workspace**: a folder under one of the config's client_homes. Do NOT create a CLAUDE.md or IDENTITY.md (Layer 0 exists at the workspace root) and do NOT create a local _config/. Build the workspace's client shape: CONTEXT.md + memory/ (with MEMORY.md stub and log/) + references/ + output/. The CONTEXT.md is the engagement contract (use the client-delivery question set). Reference the workspace's _config by path; re-export nothing. Then add the client row to the parent routing table and suggest the workspace's sync/logging skills where they exist (in _Code: /icm-sync and /log-work).
+- **New project inside a configured workspace**: a folder under one of the config's project_homes. Same principle: CONTEXT.md + the archetype's working folders only, no Layer 0, constraints referenced not copied, parent routing updated.
 
 For in-workspace scaffolds, the archetype question still applies (it shapes the CONTEXT.md contract and working folders), but the workspace's conventions win wherever they conflict with the archetype's tree.
 
 ### 1.0b Location (immediately after scope)
 
-- **Standalone**: ask for the parent directory explicitly (free text, but offer known bases as suggestions: `D:\_Development Projects\` for dev work, or wherever the user keeps that kind of project). Confirm the full resulting path (`<parent>\<kebab-case-name>`) before building; create nothing until the playback in 1.4 is confirmed.
-- **New client**: ask which home via AskUserQuestion: DDM Solutions, Assured Velocity, Capability Core, or NED. Derive the path from the answer (`<vehicle>/clients/<kebab-case-client-name>/` or `ned/clients/<name>/`); never ask the user to type a path that convention already determines. Remember clients are never shared across vehicles.
-- **New project**: ask which home: Capability Core (`capability-core/projects/`) or personal (`personal/projects/`). Same derivation rule.
+- **Standalone**: ask for the parent directory explicitly (free text; offer the user's known project bases as suggestions). Confirm the full resulting path (`<parent>\<kebab-case-name>`) before building; create nothing until the playback in 1.4 is confirmed.
+- **New client / new project**: present the homes from `icm.config.json` as an AskUserQuestion choice and derive the path from the answer; never ask the user to type a path that convention already determines. Clients are never shared across homes.
 
-Folder names: kebab-case, full trading name for companies, per `_config/conventions.md`. State the derived path in the 1.4 playback.
+Folder names: kebab-case, full trading name for companies (follow the workspace's conventions file where one exists). State the derived path in the 1.4 playback.
 
 ### 1.1 Archetype (AskUserQuestion, one of four + Other)
 
@@ -70,7 +71,7 @@ Play back a one-screen summary of every answer and every inferred default. Get a
 Write the interview answers as JSON (schema documented at the top of `scripts/scaffold.py`) to the session scratchpad, then:
 
 ```
-python "P:\_Code-mem\.claude\skills\icm-scaffold\scripts\scaffold.py" answers.json --dry-run
+python "<this skill's base directory>/scripts/scaffold.py" answers.json --dry-run
 ```
 
 The dry-run report IS the 1.4 playback: show the user the derived root, dirs, files and unfilled brackets, get the yes, then rerun without `--dry-run`. The script derives paths, creates the tree, generates the files, enforces the line budgets in code, refuses non-empty targets without `--force`, and exits 2 listing any missing required answers - if it does, the interview missed something: go back and ask, never hand-edit the JSON with invented facts.
