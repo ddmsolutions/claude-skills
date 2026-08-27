@@ -334,13 +334,18 @@ TRANSFER_SKILLS = ["icm-sync", "icm-context-scaffold"]
 def library_root():
     """The claude-skills library this script was pulled from.
 
-    scaffold.py lives at <library>/icm-scaffold/scripts/scaffold.py both in the
-    repo and in any synced copy of the whole library. Returns None when only
-    the icm-scaffold folder was copied without its siblings.
+    scaffold.py lives at <library>/icm-scaffold/scripts/scaffold.py in the repo
+    and in a workspace's synced skills/ folder. When running from a discovery
+    copy (.claude/skills/icm-scaffold/), fall back to the workspace's visible
+    skills/ folder. Returns None when no complete library is reachable.
     """
-    root = Path(__file__).resolve().parents[2]
-    if (root / "icm-sync").is_dir() and (root / "templates").is_dir():
-        return root
+    here = Path(__file__).resolve()
+    candidates = [here.parents[2]]
+    if len(here.parents) > 4:
+        candidates.append(here.parents[4] / "skills")  # <ws>/.claude/skills/... -> <ws>/skills
+    for root in candidates:
+        if (root / "icm-sync").is_dir() and (root / "templates").is_dir():
+            return root
     return None
 
 
