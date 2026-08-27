@@ -1,0 +1,9 @@
+{
+  "name": "icm",
+  "version": "0.1.0",
+  "description": "ICM (Interpretable Context Methodology) toolset: /icm-scaffold interactive workspace builder with deterministic assembly engine, /icm-sync routing-file sync, /icm-context-scaffold CONTEXT.md coverage, plus the canonical templates (claude-md, stage-context, prd, progress, constraints, automation-audit).",
+  "author": {
+    "name": "DDM Solutions",
+    "email": "richard.danks@ddmsolutions.co.uk"
+  }
+}
