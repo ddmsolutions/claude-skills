@@ -21,6 +21,7 @@ gets promoted to its own repository (as ai-memory already is).
 | `diagramming` | Render-tested diagrams via the right tool for the job (Mermaid, PlantUML, Graphviz, matplotlib, D3, browser-JS) in a draw, render, review, fix loop; never returns un-rendered source | No | all |
 | `pptx` | Markdown to PowerPoint: reshapes prose into slide-shaped content (one idea per slide, answer first, notes for detail), embeds rendered diagrams, converts via pandoc with an optional house template | No | content, client, ops |
 | `humanizer` | External (blader/humanizer, pinned commit): rewrites AI-sounding prose per Wikipedia's Signs of AI writing - keeps every claim, invents nothing, matches the writer's voice | No | content |
+| `funding-finder` | Funding discovery and tracking: sweeps grants, loans, reliefs and competitions per beneficiary lane, scores with a bundled deterministic fit engine (selftested, no keys), maintains a watchlist and digest | No | client, ops |
 | `ma-playbook` | M&A playbook for both sides of a deal: rationale, due diligence red flags, valuation, negotiation terms, integration | No | client, ops |
 | `board-deck-builder` | Board and investor deck assembly: fixed 11-section structure, 4-act narrative, bad-news protocol (assumes US VC reporting; adapt for UK boards) | No | client |
 | `chief-ai-officer-advisor` | CAIO decision frameworks with a reference library: build-vs-buy, regulatory risk tiers, API-vs-self-hosted economics, AI hiring sequence | No | client, ops |

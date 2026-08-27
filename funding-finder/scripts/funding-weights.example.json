@@ -1,0 +1,10 @@
+{
+  "_comment": "Default funding-fit rubric weights for scripts/funding/fit_score.py. Committed generic defaults. Weights need not sum to 1 (weighted_matrix normalises them). Copy to .claude/data/funding-weights.json to tune per instance (that path is gitignored). Raise deadline_runway if the watchlist keeps surfacing schemes there is no time to apply for; raise competition_intensity to favour uncontested reliefs over flagship competitions.",
+  "weights": {
+    "eligibility_fit": 0.30,
+    "strategic_fit": 0.25,
+    "amount_vs_effort": 0.20,
+    "deadline_runway": 0.15,
+    "competition_intensity": 0.10
+  }
+}

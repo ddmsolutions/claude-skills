@@ -1,0 +1,37 @@
+{
+  "_comment": "FICTITIOUS fixture for `python scripts/funding/fit_score.py selftest` (run with a fixed today of 2026-01-15). Every scheme, provider, and number here is invented for testing the anchors and auto-derivation; none is a real funding programme. Also serves as the input-shape example for the funding-scan skill.",
+  "title": "funding fit selftest fixture",
+  "scale": 5,
+  "candidates": [
+    {
+      "name": "Fictional Rolling Innovation Relief",
+      "provider": "Example Revenue Authority",
+      "deadline": null,
+      "scores": {"eligibility_fit": 5, "strategic_fit": 5, "amount_vs_effort": 4, "competition_intensity": 5}
+    },
+    {
+      "name": "Fictional Deep Tech Competition",
+      "provider": "Example Research Agency",
+      "deadline": "2026-04-30",
+      "scores": {"eligibility_fit": 4, "strategic_fit": 5, "competition_intensity": 1}
+    },
+    {
+      "name": "Fictional Regional Growth Voucher",
+      "provider": "Example Growth Hub",
+      "deadline": "2026-02-20",
+      "scores": {"eligibility_fit": 4, "strategic_fit": 3, "amount_vs_effort": 3, "competition_intensity": 3}
+    },
+    {
+      "name": "Fictional Last Minute Grant",
+      "provider": "Example Council",
+      "deadline": "2026-01-24",
+      "scores": {"eligibility_fit": 5, "strategic_fit": 4, "amount_vs_effort": 4, "competition_intensity": 3}
+    },
+    {
+      "name": "Fictional Expired Scheme",
+      "provider": "Example Foundation",
+      "deadline": "2025-12-31",
+      "scores": {"eligibility_fit": 2, "strategic_fit": 2, "amount_vs_effort": 2, "competition_intensity": 2}
+    }
+  ]
+}

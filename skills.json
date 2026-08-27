@@ -34,6 +34,10 @@
       "description": "Markdown to PowerPoint: reshapes prose into slide-shaped content, embeds diagrams, converts via pandoc with optional house template",
       "recommend_for": ["content", "client", "ops"]
     },
+    "funding-finder": {
+      "description": "Sweeps for grants, loans, reliefs and competitions for the workspace's beneficiary lanes, scores deterministically with the bundled fit engine, maintains a watchlist, files a digest. Generalised from the production funding pipeline",
+      "recommend_for": ["client", "ops"]
+    },
     "ma-playbook": {
       "description": "M&A playbook for both sides of a transaction: strategic rationale, due diligence red flags, valuation, negotiation terms, integration. Vendored from alirezarezvani/claude-skills @19392f7 (MIT), ecosystem dependencies removed",
       "recommend_for": ["client", "ops"]
