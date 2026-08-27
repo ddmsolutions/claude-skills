@@ -17,16 +17,14 @@
     "icm-scaffold": {
       "description": "The workspace factory itself; only for workspaces that will scaffold other workspaces",
       "recommend_for": []
-    }
-  },
-  "external_example": {
+    },
     "humanizer": {
-      "description": "AI-writing cleanup (example entry, not registered)",
+      "description": "Rewrites AI-sounding prose against Wikipedia's Signs of AI writing: keeps every claim, invents nothing, matches the writer's voice. Note: our house no-dash rule outranks its sample-following on em dashes",
       "recommend_for": ["content"],
       "source": {
         "repo": "https://github.com/blader/humanizer",
         "path": ".",
-        "ref": "<full commit sha - pin before registering>"
+        "ref": "e2e92e7b4b8229253ed5c8e81dc65463fdeddda5"
       }
     }
   }
