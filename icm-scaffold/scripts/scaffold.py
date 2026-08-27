@@ -314,6 +314,8 @@ def build(a: dict, dry: bool, force: bool):
                        "run /icm-sync (in-workspace scopes)",
                        "review every generated file before first use"],
     }
+    if scope == "standalone":
+        report["skills_provisioning"] = plan_skills(root)
     if not dry:
         for d in dirs:
             (root / d).mkdir(parents=True, exist_ok=True)
@@ -321,7 +323,60 @@ def build(a: dict, dry: bool, force: bool):
             p = root / rel
             p.parent.mkdir(parents=True, exist_ok=True)
             p.write_text(content, encoding="utf-8")
+        if scope == "standalone":
+            provision_skills(root)
     print(json.dumps(report, indent=1))
+
+
+TRANSFER_SKILLS = ["icm-sync", "icm-context-scaffold"]
+
+
+def library_root():
+    """The claude-skills library this script was pulled from.
+
+    scaffold.py lives at <library>/icm-scaffold/scripts/scaffold.py both in the
+    repo and in any synced copy of the whole library. Returns None when only
+    the icm-scaffold folder was copied without its siblings.
+    """
+    root = Path(__file__).resolve().parents[2]
+    if (root / "icm-sync").is_dir() and (root / "templates").is_dir():
+        return root
+    return None
+
+
+def plan_skills(root: Path):
+    lib = library_root()
+    if not lib:
+        return {"status": "skipped: claude-skills library not found alongside "
+                          "scaffold.py; pull the full library to enable provisioning"}
+    return {"status": "planned", "source": str(lib),
+            "into": [f"skills/{s}" for s in TRANSFER_SKILLS] + ["skills/templates"],
+            "discovery": [f".claude/skills/{s}" for s in TRANSFER_SKILLS]}
+
+
+def provision_skills(root: Path):
+    """Pull the transferable skills into the new workspace: canonical copies in
+    the visible skills/ folder, discovery copies in .claude/skills/."""
+    import shutil
+    lib = library_root()
+    if not lib:
+        return
+    for s in TRANSFER_SKILLS:
+        src = lib / s
+        if src.is_dir():
+            shutil.copytree(src, root / "skills" / s, dirs_exist_ok=True)
+            shutil.copytree(src, root / ".claude" / "skills" / s, dirs_exist_ok=True)
+    if (lib / "templates").is_dir():
+        shutil.copytree(lib / "templates", root / "skills" / "templates",
+                        dirs_exist_ok=True)
+    (root / "skills" / "README.md").write_text(
+        "# skills\n\nPulled from https://github.com/ddmsolutions/claude-skills - "
+        "the source of truth. Update by re-pulling; do not edit here.\n"
+        f"Synced: {TODAY}\n", encoding="utf-8")
+    (root / ".claude" / "skills" / "README.md").write_text(
+        "# Synced skills\n\nDiscovery copies of /skills (canonical content pulled "
+        "from github.com/ddmsolutions/claude-skills). Edit in the repo, re-pull, "
+        "never edit here.\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

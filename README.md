@@ -19,17 +19,24 @@ automation-audit.
 
 Built on ICM (Van Clief and McDermott, arXiv:2603.16021) and Vault Toolkit patterns.
 
-## Install
+## Install (this repo is the source of truth)
 
-Copy the skill folders you want into a project's `.claude/skills/` (or
-`~/.claude/skills/` to make them available in every project on the machine):
+Clone once, then sync any workspace from it:
 
 ```
 git clone https://github.com/ddmsolutions/claude-skills
-copy claude-skills\icm-scaffold, icm-sync, icm-context-scaffold -> .claude\skills\
+python claude-skills/pull-skills.py --workspace <your-workspace>
 ```
 
-Update by pulling and re-copying, or symlink the folders to track the repo directly.
+The sync places canonical, visible copies in `<workspace>/skills/` and discovery
+copies in `<workspace>/.claude/skills/` (where Claude Code loads them). Re-run
+to update; copies are replaced wholesale so removals propagate. Never edit the
+copies - edit here, commit, push, re-pull.
+
+Workspaces scaffolded by `/icm-scaffold` (standalone scope) are provisioned
+automatically: the scaffold pulls `icm-sync` and `icm-context-scaffold` plus
+`templates/` from the library into the new workspace's `skills/` and
+`.claude/skills/` at creation time.
 
 ## Known limitations (v0.1)
 
