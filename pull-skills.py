@@ -141,6 +141,9 @@ def main():
 
     if (REPO / "templates").is_dir():
         sync_dir(REPO / "templates", ws / "skills" / "templates")
+    if MANIFEST.is_file():
+        (ws / "skills").mkdir(exist_ok=True)
+        shutil.copy2(MANIFEST, ws / "skills" / "skills.json")
 
     (ws / "skills").mkdir(exist_ok=True)
     (ws / "skills" / ".source.json").write_text(json.dumps({
